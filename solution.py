@@ -7,14 +7,12 @@ import re
 import sys
 
 class Solution:
-    isSolutionExists = True
-    errorMessage = ""
+    isSolutionExists, errorMessage = True, ""
 
 
     def cholesky_decomposition(matrix):
         n = len(matrix)
         L = [[0.0] * n for _ in range(n)]
-        
         for i in range(n):
             for j in range(i+1):
                 s = sum(L[i][k] * L[j][k] for k in range(j))
@@ -22,29 +20,23 @@ class Solution:
                     L[i][j] = (matrix[i][i] - s) ** 0.5
                 elif L[j][j] != 0.0: 
                     L[i][j] = (1.0 / L[j][j] * (matrix[i][j] - s))
-                else:
-                    raise ValueError("Zero diagonal encountered, Cholesky decomposition cannot proceed.")
-        
+                else: raise ValueError("Zero diagonal encountered, Cholesky decomposition cannot proceed.")
         return L
     
 
     def forward_substitution(L, b):
         n = len(b)
         y = [0.0] * n
-        
         for i in range(n):
             y[i] = (b[i] - sum(L[i][j] * y[j] for j in range(i))) / L[i][i]
-            
         return y
     
 
     def backward_substitution(LT, y):
         n = len(y)
         x = [0.0] * n
-        
         for i in reversed(range(n)):
             x[i] = (y[i] - sum(LT[i][j] * x[j] for j in range(i+1, n))) / LT[i][i]
-        
         return x
     
 
